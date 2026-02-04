@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sejuti ❤️ Valentine</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+        margin: 0;
+        height: 100vh;
+        background: linear-gradient(135deg, #ff2f6e, #ff9aa2);
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        text-align: center;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 500px;
+        padding: 20px;
+        position: relative;
+        z-index: 2;
+    }
+
+    h1 {
+        font-size: 2.2rem;
+    }
+
+    p {
+        font-size: 1.2rem;
+        margin-bottom: 25px;
+    }
+
+    .buttons {
+        position: relative;
+        height: 240px;
+    }
+
+    button {
+        position: absolute;
+        padding: 16px 34px;
+        font-size: 1.2rem;
+        border-radius: 40px;
+        border: none;
+        user-select: none;
+        transition: transform 0.15s;
+    }
+
+    #yesBtn {
+        background: white;
+        color: #ff2f6e;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 20px;
+        cursor: pointer;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    #noBtn {
+        background: #ff004f;
+        color: white;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        cursor: not-allowed;
+    }
+
+    /* Shake animation */
+    @keyframes shake {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(-6px); }
+        50% { transform: translateX(6px); }
+        75% { transform: translateX(-6px); }
+        100% { transform: translateX(0); }
+    }
+
+    /* Hearts */
+    .heart {
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        background: red;
+        transform: rotate(45deg);
+        animation: float 6s infinite linear;
+        opacity: 0.7;
+    }
+
+    .heart::before,
+    .heart::after {
+        content: "";
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        background: red;
+        border-radius: 50%;
+    }
+
+    .heart::before { top: -8px; left: 0; }
+    .heart::after { left: -8px; top: 0; }
+
+    @keyframes float {
+        from { transform: translateY(110vh) rotate(45deg); opacity: 0; }
+        to { transform: translateY(-20vh) rotate(45deg); opacity: 0; }
+    }
+
+    @media (max-width: 480px) {
+        h1 { font-size: 1.9rem; }
+        button { font-size: 1rem; padding: 14px 26px; }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h1>Sejuti, will you be my Valentine? 💘</h1>
+    <p>Go ahead… try saying no 😏</p>
+
+    <div class="buttons">
+        <button id="yesBtn" onclick="yesClicked()">YES ❤️</button>
+        <button id="noBtn">NO 💔</button>
+    </div>
+</div>
+
+<script>
+    const noBtn = document.getElementById("noBtn");
+
+    let attempt = 0;
+    const taunts = [
+        "Nice try 😏",
+        "Too slow 😜",
+        "Almost 😂",
+        "Not happening 💀",
+        "Give up 😌",
+        "Wrong choice 😈"
+    ];
+
+    function dodge(clientX, clientY) {
+        attempt++;
+
+        // Shake before escape
+        noBtn.style.animation = "shake 0.25s";
+        setTimeout(() => noBtn.style.animation = "", 250);
+
+        // Speed increases every attempt
+        const speed = 80 + attempt * 15;
+
+        const btnRect = noBtn.getBoundingClientRect();
+        const centerX = btnRect.left + btnRect.width / 2;
+        const centerY = btnRect.top + btnRect.height / 2;
+
+        // Direction AWAY from finger/mouse
+        let dx = centerX - clientX;
+        let dy = centerY - clientY;
+
+        const length = Math.sqrt(dx * dx + dy * dy) || 1;
+        dx /= length;
+        dy /= length;
+
+        let newX = noBtn.offsetLeft + dx * speed;
+        let newY = noBtn.offsetTop + dy * speed;
+
+        // Keep inside screen
+        const padding = 10;
+        const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+        const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+        newX = Math.max(padding, Math.min(newX, maxX));
+        newY = Math.max(padding, Math.min(newY, maxY));
+
+        noBtn.style.left = newX + "px";
+        noBtn.style.top = newY + "px";
+
+        // Taunt text
+        noBtn.textContent = taunts[attempt % taunts.length];
+    }
+
+    // Desktop
+    noBtn.addEventListener("mouseenter", e => {
+        dodge(e.clientX, e.clientY);
+    });
+
+    // Mobile
+    noBtn.addEventListener("touchstart", e => {
+        e.preventDefault();
+        const touch = e.touches[0];
+        dodge(touch.clientX, touch.clientY);
+    });
+
+    function yesClicked() {
+        document.body.innerHTML = `
+            <div style="
+                height:100vh;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                flex-direction:column;
+                background:linear-gradient(135deg,#ff2f6e,#ff9aa2);
+                color:white;
+                text-align:center;
+                padding:20px;">
+                <h1>You win 💖</h1>
+                <p style="font-size:1.4rem;">Sejuti, you’re officially my Valentine 🎈</p>
+                <p>Smart choice 😄</p>
+            </div>
+        `;
+    }
+
+    // Hearts
+    for (let i = 0; i < 20; i++) {
+        const h = document.createElement("div");
+        h.className = "heart";
+        h.style.left = Math.random() * 100 + "vw";
+        h.style.animationDelay = Math.random() * 5 + "s";
+        document.body.appendChild(h);
+    }
+</script>
+
+</body>
+</html>
+
+
+
