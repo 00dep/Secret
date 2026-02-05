@@ -1,145 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sejuti Valentine</title>
+<title>For Sejuti</title>
 
 <style>
-*{box-sizing:border-box;font-family:Arial}
+*{box-sizing:border-box;font-family:system-ui,-apple-system,sans-serif;}
 body{
- margin:0;height:100vh;overflow:hidden;
- display:flex;align-items:center;justify-content:center;
- background:linear-gradient(135deg,#ff2f6e,#ff9aa2);
- color:#fff;text-align:center;
+  margin:0;height:100vh;overflow:hidden;
+  display:flex;justify-content:center;align-items:center;
+  background:linear-gradient(135deg,#ff4e8a,#ff9ecb);
+  color:white;text-align:center;
 }
-.container{max-width:520px;padding:20px;position:relative}
-.buttons{position:relative;height:260px}
-
+.card{
+  width:95%;max-width:420px;
+  background:rgba(0,0,0,.15);
+  backdrop-filter:blur(10px);
+  padding:30px 20px;border-radius:20px;
+  position:relative;
+}
+h1{margin:0 0 10px;font-size:26px;}
+#caption{min-height:28px;margin-bottom:20px;font-size:16px;}
+.buttons{position:relative;height:160px;}
 button{
- position:absolute;
- padding:16px 34px;
- font-size:1.1rem;
- border-radius:40px;
- border:none;
- transition:left .35s ease, top .35s ease, transform .15s;
+  border:none;border-radius:999px;
+  padding:14px 22px;font-size:18px;font-weight:bold;
+  cursor:pointer;transition:.25s;touch-action:manipulation;
 }
-
-#yesBtn{
- background:#fff;color:#ff2f6e;
- left:50%;transform:translateX(-50%);
- bottom:20px;cursor:pointer;
-}
-
+#yesBtn{background:#00e676;color:black;font-size:20px;}
 #noBtn{
- background:#ff004f;color:#fff;
- top:20px;left:50%;
- transform:translateX(-50%);
- cursor:not-allowed;
+  background:#ff1744;color:white;
+  position:absolute;left:55%;top:60%;
+  transform:translate(-50%,-50%);
 }
 
-@keyframes shake{
-0%{transform:translateX(0)}
-25%{transform:translateX(-6px)}
-50%{transform:translateX(6px)}
-75%{transform:translateX(-6px)}
-100%{transform:translateX(0)}
+#celebration{
+  position:fixed;inset:0;background:black;
+  display:none;justify-content:center;align-items:center;
+  flex-direction:column;z-index:10;
 }
+#celebration h2{font-size:38px;z-index:11;}
+canvas{position:absolute;inset:0;}
 </style>
 </head>
 
 <body>
 
-<div class="container">
-<h1>Sejuti, be my Valentine?</h1>
-<p>Try pressing NO 🙂</p>
+<div class="card" id="card">
+  <h1>Sejuti, will you go out with me?</h1>
+  <div id="caption"></div>
 
-<div class="buttons">
-<button id="yesBtn">YES ❤️</button>
-<button id="noBtn">NO 💔</button>
+  <div class="buttons">
+    <button id="yesBtn">Yes 💖</button>
+    <button id="noBtn">No</button>
+  </div>
 </div>
+
+<div id="celebration">
+  <h2>YAYYY Sejuti!!! 🎉</h2>
+  <canvas id="fireworks"></canvas>
 </div>
 
 <script>
 const noBtn = document.getElementById("noBtn");
-let attempt = 0;
+const yesBtn = document.getElementById("yesBtn");
+const caption = document.getElementById("caption");
+const card = document.getElementById("card");
 
-const taunts=[
-"Nice try 😏",
-"Too slow 😜",
-"Nope 😂",
-"Miss again 💀",
-"Catch me 😌"
+const captions = [
+ "Are you sure, Sejuti?",
+ "Wrong choice 😌",
+ "Try again.",
+ "You know the correct answer.",
+ "Don’t do this, Sejuti.",
+ "Press yes already.",
+ "Negotiation failed.",
+ "Yes button is better."
 ];
 
-function slideAway(px,py){
- attempt++;
+let noScale = 1, yesScale = 1, i = 0;
 
- noBtn.style.animation="shake .25s";
- setTimeout(()=>noBtn.style.animation="",250);
-
- const rect=noBtn.getBoundingClientRect();
- const cx=rect.left+rect.width/2;
- const cy=rect.top+rect.height/2;
-
- let dx=cx-px;
- let dy=cy-py;
- const len=Math.sqrt(dx*dx+dy*dy)||1;
- dx/=len; dy/=len;
-
- const speed=120+attempt*20;
-
- let nx=noBtn.offsetLeft+dx*speed;
- let ny=noBtn.offsetTop+dy*speed;
-
- const pad=8;
- nx=Math.max(pad,Math.min(nx,window.innerWidth-noBtn.offsetWidth-pad));
- ny=Math.max(pad,Math.min(ny,window.innerHeight-noBtn.offsetHeight-pad));
-
- noBtn.style.left=nx+"px";
- noBtn.style.top=ny+"px";
- noBtn.textContent=taunts[attempt%taunts.length];
+function moveNo(){
+  const r = card.getBoundingClientRect();
+  noBtn.style.left = Math.random()*(r.width-80)+"px";
+  noBtn.style.top = Math.random()*140+"px";
 }
 
-/* desktop */
-document.addEventListener("mousemove",e=>{
- const r=noBtn.getBoundingClientRect();
- if(
-  e.clientX>r.left-40 &&
-  e.clientX<r.right+40 &&
-  e.clientY>r.top-40 &&
-  e.clientY<r.bottom+40
- ){
-  slideAway(e.clientX,e.clientY);
- }
-});
+function dodge(){
+  caption.textContent = captions[i++ % captions.length];
+  noScale *= .75;
+  yesScale *= 1.25;
+  noBtn.style.transform=`translate(-50%,-50%) scale(${noScale})`;
+  yesBtn.style.transform=`scale(${yesScale})`;
+  moveNo();
+}
 
-/* mobile drag */
-document.addEventListener("touchmove",e=>{
- const t=e.touches[0];
- const r=noBtn.getBoundingClientRect();
- if(
-  t.clientX>r.left-40 &&
-  t.clientX<r.right+40 &&
-  t.clientY>r.top-40 &&
-  t.clientY<r.bottom+40
- ){
-  slideAway(t.clientX,t.clientY);
- }
-},{passive:false});
+noBtn.addEventListener("mouseenter", dodge);
+noBtn.addEventListener("touchstart", e=>{e.preventDefault(); dodge();});
 
-document.getElementById("yesBtn").onclick=()=>{
- document.body.innerHTML=`
- <div style="height:100vh;display:flex;align-items:center;
- justify-content:center;flex-direction:column">
- <h1>Locked in ❤️</h1>
- <h2>Sejuti is my Valentine</h2>
- </div>`;
+yesBtn.onclick = ()=>{
+  document.getElementById("celebration").style.display="flex";
+  startFireworks();
 };
+
+/* fireworks */
+const c = document.getElementById("fireworks");
+const ctx = c.getContext("2d");
+function resize(){c.width=innerWidth;c.height=innerHeight;}
+resize(); addEventListener("resize",resize);
+
+const parts=[];
+function boom(x,y){
+  for(let k=0;k<80;k++){
+    parts.push({x,y,vx:(Math.random()-.5)*6,vy:(Math.random()-.5)*6,l:60});
+  }
+}
+function startFireworks(){
+  setInterval(()=>boom(Math.random()*c.width,Math.random()*c.height*.6),600);
+  (function anim(){
+    ctx.fillStyle="rgba(0,0,0,.25)";
+    ctx.fillRect(0,0,c.width,c.height);
+    for(let j=parts.length-1;j>=0;j--){
+      let p=parts[j];
+      p.x+=p.vx; p.y+=p.vy; p.vy+=.05; p.l--;
+      ctx.fillStyle=`hsl(${Math.random()*360},100%,60%)`;
+      ctx.fillRect(p.x,p.y,3,3);
+      if(p.l<=0) parts.splice(j,1);
+    }
+    requestAnimationFrame(anim);
+  })();
+}
 </script>
 
 </body>
 </html>
-
-
 
