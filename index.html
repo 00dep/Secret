@@ -10,60 +10,52 @@
 body{
   margin:0;height:100vh;overflow:hidden;
   display:flex;justify-content:center;align-items:center;
-  background:linear-gradient(135deg,#ff6fa9,#ffc3da,#ffddeb);
+  background:linear-gradient(135deg,#ff5fa2,#ffc2d9,#ffe3ef);
   color:white;text-align:center;
 }
 
 /* floating hearts */
-body::before{
-  content:"";
-  position:fixed;inset:0;
-  background-image:
-    radial-gradient(circle at 20% 30%, #ffffff55 2px, transparent 3px),
-    radial-gradient(circle at 80% 20%, #ffffff55 2px, transparent 3px),
-    radial-gradient(circle at 40% 70%, #ffffff55 2px, transparent 3px);
-  animation:float 12s linear infinite;
+
+.heart{
+  position:fixed;
+  width:14px;height:14px;
+  background:#ffffffaa;
+  transform:rotate(45deg);
+  animation:rise linear forwards;
 }
-@keyframes float{
-  from{transform:translateY(0)}
-  to{transform:translateY(-200px)}
+.heart:before,.heart:after{
+  content:"";
+  position:absolute;
+  width:14px;height:14px;
+  background:#ffffffaa;
+  border-radius:50%;
+}
+.heart:before{left:-7px;}
+.heart:after{top:-7px;}
+
+@keyframes rise{
+  from{transform:translateY(0) rotate(45deg);opacity:1;}
+  to{transform:translateY(-120vh) rotate(45deg);opacity:0;}
 }
 
 .card{
-  width:95%;max-width:420px;
-  background:rgba(255,255,255,.18);
-  backdrop-filter:blur(14px);
-  padding:30px 22px;
-  border-radius:24px;
-  box-shadow:0 20px 60px rgba(0,0,0,.25);
-  position:relative;
+  width:95%;max-width:430px;
+  background:rgba(255,255,255,.2);
+  backdrop-filter:blur(16px);
+  padding:32px 22px;
+  border-radius:26px;
+  box-shadow:0 25px 70px rgba(0,0,0,.25);
 }
 
-h1{
-  margin:0 0 8px;
-  font-size:26px;
-  text-shadow:0 4px 20px rgba(0,0,0,.25);
-}
+h1{margin:6px 0;font-size:26px;}
+#typeText{min-height:60px;font-size:18px;font-weight:600;}
 
-.sub{
-  font-size:15px;
-  opacity:.95;
-  margin-bottom:18px;
-}
-
-#caption{
-  min-height:30px;
-  margin-bottom:20px;
-  font-size:16px;
-  font-weight:600;
-}
-
-.buttons{position:relative;height:170px;}
+.buttons{position:relative;height:170px;margin-top:10px;}
 
 button{
   border:none;border-radius:999px;
-  padding:14px 24px;
-  font-size:18px;font-weight:700;
+  padding:14px 26px;
+  font-size:18px;font-weight:800;
   cursor:pointer;
   transition:.25s;
   touch-action:manipulation;
@@ -72,7 +64,14 @@ button{
 #yesBtn{
   background:white;
   color:#ff2f7a;
-  box-shadow:0 10px 30px rgba(0,0,0,.25);
+  box-shadow:0 0 0 rgba(255,255,255,.7);
+  animation:pulse 2s infinite;
+}
+
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,255,255,.7);}
+  70%{box-shadow:0 0 0 18px rgba(255,255,255,0);}
+  100%{box-shadow:0 0 0 0 rgba(255,255,255,0);}
 }
 
 #noBtn{
@@ -83,106 +82,161 @@ button{
   transform:translate(-50%,-50%);
 }
 
-/* celebration video screen */
+#caption{
+  min-height:28px;
+  font-weight:700;
+  margin-top:8px;
+}
+
+/* celebration */
 
 #celebration{
   position:fixed;inset:0;
   display:none;
   justify-content:center;
   align-items:center;
-  overflow:hidden;
+  flex-direction:column;
   z-index:10;
 }
 
 #bgVideo{
   position:absolute;
-  width:100%;
-  height:100%;
+  width:100%;height:100%;
   object-fit:cover;
 }
 
-#celebration .msg{
+.msg{
   position:relative;
   z-index:2;
-  color:white;
   font-size:34px;
-  font-weight:800;
+  font-weight:900;
   text-shadow:0 0 25px black;
-  padding:20px;
+}
+
+.replay{
+  position:relative;
+  z-index:2;
+  margin-top:20px;
+  background:white;
+  color:black;
 }
 </style>
 </head>
 
 <body>
 
+<!-- optional music -->
+<audio id="music" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
 <div class="card" id="card">
   <h1>Sejuti</h1>
-  <div class="sub">I have a serious question for you</div>
-
-  <h1>Will you go out with me?</h1>
-  <div id="caption"></div>
+  <div id="typeText"></div>
 
   <div class="buttons">
     <button id="yesBtn">Yes</button>
     <button id="noBtn">No</button>
   </div>
+
+  <div id="caption"></div>
 </div>
 
 <div id="celebration">
   <video id="bgVideo" autoplay muted loop playsinline>
     <source src="fireworks.mp4" type="video/mp4">
   </video>
+
   <div class="msg">
     She said YES<br>
-    Best decision of the day
+    Mission successful
   </div>
+
+  <button class="replay" onclick="location.reload()">Replay</button>
 </div>
 
 <script>
+/* -------- typewriter romantic intro -------- */
+
+const lines = [
+ "I tried to say this normally.",
+ "Didn’t work.",
+ "So I built this instead.",
+ "One honest question.",
+ "Will you go out with me?"
+];
+
+const typeBox = document.getElementById("typeText");
+let li=0, ci=0;
+
+function type(){
+  if(li>=lines.length) return;
+  if(ci < lines[li].length){
+    typeBox.textContent += lines[li][ci++];
+    setTimeout(type,40);
+  }else{
+    typeBox.innerHTML += "<br>";
+    li++; ci=0;
+    setTimeout(type,500);
+  }
+}
+type();
+
+/* -------- floating hearts generator -------- */
+
+function makeHeart(){
+  const h=document.createElement("div");
+  h.className="heart";
+  h.style.left=Math.random()*100+"vw";
+  h.style.bottom="-20px";
+  h.style.animationDuration = 6+Math.random()*6+"s";
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),12000);
+}
+setInterval(makeHeart,400);
+
+/* -------- button logic -------- */
+
 const noBtn = document.getElementById("noBtn");
 const yesBtn = document.getElementById("yesBtn");
 const caption = document.getElementById("caption");
 const card = document.getElementById("card");
+const music = document.getElementById("music");
 
-const captions = [
- "Think carefully.",
- "This could be legendary.",
- "Your yes will make my day.",
- "Don’t break my dramatic build-up.",
- "You know this is meant to be.",
- "Romantic movies prepared me for this.",
- "Still chasing the No button?",
- "Yes is the correct answer."
+const caps=[
+ "You can try. It won’t work.",
+ "Wrong answer detected.",
+ "System prefers YES.",
+ "Romance algorithm says yes.",
+ "Stop chasing the No button."
 ];
 
-let noScale = 1, yesScale = 1, i = 0;
+let ns=1, ys=1, i=0;
 
 function moveNo(){
-  const r = card.getBoundingClientRect();
-  noBtn.style.left = Math.random()*(r.width-90)+"px";
-  noBtn.style.top = Math.random()*150+"px";
+  const r=card.getBoundingClientRect();
+  noBtn.style.left=Math.random()*(r.width-90)+"px";
+  noBtn.style.top=Math.random()*150+"px";
 }
 
 function dodge(){
-  caption.textContent = captions[i++ % captions.length];
-  noScale *= .75;
-  yesScale *= 1.22;
-  noBtn.style.transform=`translate(-50%,-50%) scale(${noScale})`;
-  yesBtn.style.transform=`scale(${yesScale})`;
+  caption.textContent=caps[i++%caps.length];
+  ns*=.7; ys*=1.25;
+  noBtn.style.transform=`translate(-50%,-50%) scale(${ns})`;
+  yesBtn.style.transform=`scale(${ys})`;
   moveNo();
 }
 
 noBtn.addEventListener("mouseenter", dodge);
-noBtn.addEventListener("touchstart", e=>{
-  e.preventDefault();
-  dodge();
-});
+noBtn.addEventListener("touchstart", e=>{e.preventDefault(); dodge();});
 
-yesBtn.onclick = ()=>{
-  const c = document.getElementById("celebration");
-  c.style.display = "flex";
-  const v = document.getElementById("bgVideo");
-  v.currentTime = 0;
+/* -------- yes click -------- */
+
+yesBtn.onclick=()=>{
+  music.play().catch(()=>{});
+  document.getElementById("celebration").style.display="flex";
+  const v=document.getElementById("bgVideo");
+  v.currentTime=0;
   v.play();
 };
 </script>
