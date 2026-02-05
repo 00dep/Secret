@@ -6,123 +6,44 @@
 <title>Sejuti Valentine</title>
 
 <style>
-* { box-sizing: border-box; font-family: Arial, sans-serif; }
-
-body {
-    margin:0;
-    height:100vh;
-    overflow:hidden;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:linear-gradient(135deg,#ff2f6e,#ff9aa2);
-    color:white;
-    text-align:center;
+*{box-sizing:border-box;font-family:Arial}
+body{
+ margin:0;height:100vh;overflow:hidden;
+ display:flex;align-items:center;justify-content:center;
+ background:linear-gradient(135deg,#ff2f6e,#ff9aa2);
+ color:#fff;text-align:center;
 }
+.container{max-width:520px;padding:20px;position:relative}
+.buttons{position:relative;height:260px}
 
-.container {
-    width:100%;
-    max-width:520px;
-    padding:20px;
-    position:relative;
-    z-index:2;
+button{
+ position:absolute;
+ padding:16px 34px;
+ font-size:1.1rem;
+ border-radius:40px;
+ border:none;
+ transition:left .35s ease, top .35s ease, transform .15s;
 }
 
-h1 { font-size:2.2rem; margin-bottom:10px; }
-p { font-size:1.2rem; margin-bottom:25px; }
-
-.buttons {
-    position:relative;
-    height:260px;
+#yesBtn{
+ background:#fff;color:#ff2f6e;
+ left:50%;transform:translateX(-50%);
+ bottom:20px;cursor:pointer;
 }
 
-button {
-    position:absolute;
-    padding:16px 34px;
-    font-size:1.15rem;
-    border:none;
-    border-radius:40px;
-    user-select:none;
-    transition:transform .15s;
+#noBtn{
+ background:#ff004f;color:#fff;
+ top:20px;left:50%;
+ transform:translateX(-50%);
+ cursor:not-allowed;
 }
 
-#yesBtn {
-    background:white;
-    color:#ff2f6e;
-    left:50%;
-    transform:translateX(-50%);
-    bottom:20px;
-    cursor:pointer;
-    box-shadow:0 10px 30px rgba(0,0,0,.3);
-}
-
-#noBtn {
-    background:#ff004f;
-    color:white;
-    top:20px;
-    left:50%;
-    transform:translateX(-50%);
-    cursor:not-allowed;
-}
-
-/* shake */
-@keyframes shake {
-    0%{transform:translateX(0)}
-    25%{transform:translateX(-6px)}
-    50%{transform:translateX(6px)}
-    75%{transform:translateX(-6px)}
-    100%{transform:translateX(0)}
-}
-
-/* hearts */
-.heart {
-    position:absolute;
-    width:16px;height:16px;
-    background:red;
-    transform:rotate(45deg);
-    animation:float 6s linear infinite;
-    opacity:.7;
-}
-.heart:before,.heart:after{
-    content:"";
-    position:absolute;
-    width:16px;height:16px;
-    background:red;
-    border-radius:50%;
-}
-.heart:before{top:-8px}
-.heart:after{left:-8px}
-
-@keyframes float{
-    from{transform:translateY(110vh) rotate(45deg)}
-    to{transform:translateY(-20vh) rotate(45deg)}
-}
-
-/* balloons */
-.balloon{
-    position:absolute;
-    width:34px;height:46px;
-    border-radius:50%;
-    animation:balloonUp 10s linear infinite;
-}
-@keyframes balloonUp{
-    from{transform:translateY(120vh)}
-    to{transform:translateY(-140vh)}
-}
-
-/* confetti */
-.confetti{
-    position:absolute;
-    width:8px;height:14px;
-    animation:fall 2s linear forwards;
-}
-@keyframes fall{
-    to{transform:translateY(100vh) rotate(720deg); opacity:0}
-}
-
-@media(max-width:480px){
-    h1{font-size:1.8rem}
-    button{font-size:1rem;padding:14px 26px}
+@keyframes shake{
+0%{transform:translateX(0)}
+25%{transform:translateX(-6px)}
+50%{transform:translateX(6px)}
+75%{transform:translateX(-6px)}
+100%{transform:translateX(0)}
 }
 </style>
 </head>
@@ -130,116 +51,95 @@ button {
 <body>
 
 <div class="container">
-    <h1>Sejuti, will you be my Valentine?</h1>
-    <p>Try pressing NO. See what happens.</p>
+<h1>Sejuti, be my Valentine?</h1>
+<p>Try pressing NO 🙂</p>
 
-    <div class="buttons">
-        <button id="yesBtn">YES ❤️</button>
-        <button id="noBtn">NO 💔</button>
-    </div>
+<div class="buttons">
+<button id="yesBtn">YES ❤️</button>
+<button id="noBtn">NO 💔</button>
+</div>
 </div>
 
 <script>
 const noBtn = document.getElementById("noBtn");
-const yesBtn = document.getElementById("yesBtn");
-
 let attempt = 0;
-const taunts = [
-    "Nice try",
-    "Too slow",
-    "Missed again",
-    "Nope",
-    "Catch me",
-    "Wrong button"
+
+const taunts=[
+"Nice try 😏",
+"Too slow 😜",
+"Nope 😂",
+"Miss again 💀",
+"Catch me 😌"
 ];
 
-function dodge(x,y){
-    attempt++;
+function slideAway(px,py){
+ attempt++;
 
-    // shake first
-    noBtn.style.animation="shake .25s";
-    setTimeout(()=>noBtn.style.animation="",250);
+ noBtn.style.animation="shake .25s";
+ setTimeout(()=>noBtn.style.animation="",250);
 
-    const speed = 90 + attempt*18;
+ const rect=noBtn.getBoundingClientRect();
+ const cx=rect.left+rect.width/2;
+ const cy=rect.top+rect.height/2;
 
-    const r = noBtn.getBoundingClientRect();
-    const cx = r.left + r.width/2;
-    const cy = r.top + r.height/2;
+ let dx=cx-px;
+ let dy=cy-py;
+ const len=Math.sqrt(dx*dx+dy*dy)||1;
+ dx/=len; dy/=len;
 
-    let dx = cx - x;
-    let dy = cy - y;
-    const len = Math.sqrt(dx*dx+dy*dy)||1;
-    dx/=len; dy/=len;
+ const speed=120+attempt*20;
 
-    let nx = noBtn.offsetLeft + dx*speed;
-    let ny = noBtn.offsetTop + dy*speed;
+ let nx=noBtn.offsetLeft+dx*speed;
+ let ny=noBtn.offsetTop+dy*speed;
 
-    const pad=10;
-    const maxX = window.innerWidth - noBtn.offsetWidth - pad;
-    const maxY = window.innerHeight - noBtn.offsetHeight - pad;
+ const pad=8;
+ nx=Math.max(pad,Math.min(nx,window.innerWidth-noBtn.offsetWidth-pad));
+ ny=Math.max(pad,Math.min(ny,window.innerHeight-noBtn.offsetHeight-pad));
 
-    nx = Math.max(pad, Math.min(nx,maxX));
-    ny = Math.max(pad, Math.min(ny,maxY));
-
-    noBtn.style.left = nx+"px";
-    noBtn.style.top  = ny+"px";
-
-    noBtn.textContent = taunts[attempt % taunts.length];
+ noBtn.style.left=nx+"px";
+ noBtn.style.top=ny+"px";
+ noBtn.textContent=taunts[attempt%taunts.length];
 }
 
 /* desktop */
-noBtn.addEventListener("mouseenter",e=>{
-    dodge(e.clientX,e.clientY);
+document.addEventListener("mousemove",e=>{
+ const r=noBtn.getBoundingClientRect();
+ if(
+  e.clientX>r.left-40 &&
+  e.clientX<r.right+40 &&
+  e.clientY>r.top-40 &&
+  e.clientY<r.bottom+40
+ ){
+  slideAway(e.clientX,e.clientY);
+ }
 });
 
-/* mobile */
-noBtn.addEventListener("touchstart",e=>{
-    e.preventDefault();
-    const t=e.touches[0];
-    dodge(t.clientX,t.clientY);
-});
+/* mobile drag */
+document.addEventListener("touchmove",e=>{
+ const t=e.touches[0];
+ const r=noBtn.getBoundingClientRect();
+ if(
+  t.clientX>r.left-40 &&
+  t.clientX<r.right+40 &&
+  t.clientY>r.top-40 &&
+  t.clientY<r.bottom+40
+ ){
+  slideAway(t.clientX,t.clientY);
+ }
+},{passive:false});
 
-/* YES click + confetti */
-yesBtn.onclick = ()=>{
-    for(let i=0;i<80;i++){
-        const c=document.createElement("div");
-        c.className="confetti";
-        c.style.left=Math.random()*100+"vw";
-        c.style.top="-10px";
-        c.style.background=`hsl(${Math.random()*360},90%,60%)`;
-        document.body.appendChild(c);
-        setTimeout(()=>c.remove(),2000);
-    }
-
-    document.body.innerHTML=`
-    <div style="height:100vh;display:flex;flex-direction:column;
-    justify-content:center;align-items:center;
-    background:linear-gradient(135deg,#ff2f6e,#ff9aa2);color:white">
-        <h1>Confirmed.</h1>
-        <h2>Sejuti is my Valentine.</h2>
-    </div>`;
+document.getElementById("yesBtn").onclick=()=>{
+ document.body.innerHTML=`
+ <div style="height:100vh;display:flex;align-items:center;
+ justify-content:center;flex-direction:column">
+ <h1>Locked in ❤️</h1>
+ <h2>Sejuti is my Valentine</h2>
+ </div>`;
 };
-
-/* hearts */
-for(let i=0;i<22;i++){
-    const h=document.createElement("div");
-    h.className="heart";
-    h.style.left=Math.random()*100+"vw";
-    h.style.animationDelay=Math.random()*5+"s";
-    document.body.appendChild(h);
-}
-
-/* balloons */
-for(let i=0;i<10;i++){
-    const b=document.createElement("div");
-    b.className="balloon";
-    b.style.left=Math.random()*100+"vw";
-    b.style.background=`hsl(${Math.random()*360},80%,75%)`;
-    b.style.animationDelay=Math.random()*8+"s";
-    document.body.appendChild(b);
-}
 </script>
 
 </body>
 </html>
+
+
 
