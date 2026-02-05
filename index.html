@@ -3,232 +3,243 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tulika ❤️ Valentine</title>
+<title>Sejuti Valentine</title>
 
 <style>
-    * {
-        box-sizing: border-box;
-        font-family: 'Poppins', sans-serif;
-    }
+* { box-sizing: border-box; font-family: Arial, sans-serif; }
 
-    body {
-        margin: 0;
-        height: 100vh;
-        background: linear-gradient(135deg, #ff2f6e, #ff9aa2);
-        overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        text-align: center;
-    }
+body {
+    margin:0;
+    height:100vh;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#ff2f6e,#ff9aa2);
+    color:white;
+    text-align:center;
+}
 
-    .container {
-        width: 100%;
-        max-width: 500px;
-        padding: 20px;
-        position: relative;
-        z-index: 2;
-    }
+.container {
+    width:100%;
+    max-width:520px;
+    padding:20px;
+    position:relative;
+    z-index:2;
+}
 
-    h1 {
-        font-size: 2.2rem;
-    }
+h1 { font-size:2.2rem; margin-bottom:10px; }
+p { font-size:1.2rem; margin-bottom:25px; }
 
-    p {
-        font-size: 1.2rem;
-        margin-bottom: 25px;
-    }
+.buttons {
+    position:relative;
+    height:260px;
+}
 
-    .buttons {
-        position: relative;
-        height: 240px;
-    }
+button {
+    position:absolute;
+    padding:16px 34px;
+    font-size:1.15rem;
+    border:none;
+    border-radius:40px;
+    user-select:none;
+    transition:transform .15s;
+}
 
-    button {
-        position: absolute;
-        padding: 16px 34px;
-        font-size: 1.2rem;
-        border-radius: 40px;
-        border: none;
-        user-select: none;
-        transition: transform 0.15s;
-    }
+#yesBtn {
+    background:white;
+    color:#ff2f6e;
+    left:50%;
+    transform:translateX(-50%);
+    bottom:20px;
+    cursor:pointer;
+    box-shadow:0 10px 30px rgba(0,0,0,.3);
+}
 
-    #yesBtn {
-        background: white;
-        color: #ff2f6e;
-        left: 50%;
-        transform: translateX(-50%);
-        bottom: 20px;
-        cursor: pointer;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-    }
+#noBtn {
+    background:#ff004f;
+    color:white;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%);
+    cursor:not-allowed;
+}
 
-    #noBtn {
-        background: #ff004f;
-        color: white;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        cursor: not-allowed;
-    }
+/* shake */
+@keyframes shake {
+    0%{transform:translateX(0)}
+    25%{transform:translateX(-6px)}
+    50%{transform:translateX(6px)}
+    75%{transform:translateX(-6px)}
+    100%{transform:translateX(0)}
+}
 
-    /* Shake animation */
-    @keyframes shake {
-        0% { transform: translateX(0); }
-        25% { transform: translateX(-6px); }
-        50% { transform: translateX(6px); }
-        75% { transform: translateX(-6px); }
-        100% { transform: translateX(0); }
-    }
+/* hearts */
+.heart {
+    position:absolute;
+    width:16px;height:16px;
+    background:red;
+    transform:rotate(45deg);
+    animation:float 6s linear infinite;
+    opacity:.7;
+}
+.heart:before,.heart:after{
+    content:"";
+    position:absolute;
+    width:16px;height:16px;
+    background:red;
+    border-radius:50%;
+}
+.heart:before{top:-8px}
+.heart:after{left:-8px}
 
-    /* Hearts */
-    .heart {
-        position: absolute;
-        width: 16px;
-        height: 16px;
-        background: red;
-        transform: rotate(45deg);
-        animation: float 6s infinite linear;
-        opacity: 0.7;
-    }
+@keyframes float{
+    from{transform:translateY(110vh) rotate(45deg)}
+    to{transform:translateY(-20vh) rotate(45deg)}
+}
 
-    .heart::before,
-    .heart::after {
-        content: "";
-        position: absolute;
-        width: 16px;
-        height: 16px;
-        background: red;
-        border-radius: 50%;
-    }
+/* balloons */
+.balloon{
+    position:absolute;
+    width:34px;height:46px;
+    border-radius:50%;
+    animation:balloonUp 10s linear infinite;
+}
+@keyframes balloonUp{
+    from{transform:translateY(120vh)}
+    to{transform:translateY(-140vh)}
+}
 
-    .heart::before { top: -8px; left: 0; }
-    .heart::after { left: -8px; top: 0; }
+/* confetti */
+.confetti{
+    position:absolute;
+    width:8px;height:14px;
+    animation:fall 2s linear forwards;
+}
+@keyframes fall{
+    to{transform:translateY(100vh) rotate(720deg); opacity:0}
+}
 
-    @keyframes float {
-        from { transform: translateY(110vh) rotate(45deg); opacity: 0; }
-        to { transform: translateY(-20vh) rotate(45deg); opacity: 0; }
-    }
-
-    @media (max-width: 480px) {
-        h1 { font-size: 1.9rem; }
-        button { font-size: 1rem; padding: 14px 26px; }
-    }
+@media(max-width:480px){
+    h1{font-size:1.8rem}
+    button{font-size:1rem;padding:14px 26px}
+}
 </style>
 </head>
 
 <body>
 
 <div class="container">
-    <h1>Tulika, will you be my Valentine? 💘</h1>
-    <p>Go ahead… try saying no 😏</p>
+    <h1>Sejuti, will you be my Valentine?</h1>
+    <p>Try pressing NO. See what happens.</p>
 
     <div class="buttons">
-        <button id="yesBtn" onclick="yesClicked()">YES ❤️</button>
+        <button id="yesBtn">YES ❤️</button>
         <button id="noBtn">NO 💔</button>
     </div>
 </div>
 
 <script>
-    const noBtn = document.getElementById("noBtn");
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
 
-    let attempt = 0;
-    const taunts = [
-        "Nice try 😏",
-        "Too slow 😜",
-        "Almost 😂",
-        "Not happening 💀",
-        "Give up 😌",
-        "Wrong choice 😈"
-    ];
+let attempt = 0;
+const taunts = [
+    "Nice try",
+    "Too slow",
+    "Missed again",
+    "Nope",
+    "Catch me",
+    "Wrong button"
+];
 
-    function dodge(clientX, clientY) {
-        attempt++;
+function dodge(x,y){
+    attempt++;
 
-        // Shake before escape
-        noBtn.style.animation = "shake 0.25s";
-        setTimeout(() => noBtn.style.animation = "", 250);
+    // shake first
+    noBtn.style.animation="shake .25s";
+    setTimeout(()=>noBtn.style.animation="",250);
 
-        // Speed increases every attempt
-        const speed = 80 + attempt * 15;
+    const speed = 90 + attempt*18;
 
-        const btnRect = noBtn.getBoundingClientRect();
-        const centerX = btnRect.left + btnRect.width / 2;
-        const centerY = btnRect.top + btnRect.height / 2;
+    const r = noBtn.getBoundingClientRect();
+    const cx = r.left + r.width/2;
+    const cy = r.top + r.height/2;
 
-        // Direction AWAY from finger/mouse
-        let dx = centerX - clientX;
-        let dy = centerY - clientY;
+    let dx = cx - x;
+    let dy = cy - y;
+    const len = Math.sqrt(dx*dx+dy*dy)||1;
+    dx/=len; dy/=len;
 
-        const length = Math.sqrt(dx * dx + dy * dy) || 1;
-        dx /= length;
-        dy /= length;
+    let nx = noBtn.offsetLeft + dx*speed;
+    let ny = noBtn.offsetTop + dy*speed;
 
-        let newX = noBtn.offsetLeft + dx * speed;
-        let newY = noBtn.offsetTop + dy * speed;
+    const pad=10;
+    const maxX = window.innerWidth - noBtn.offsetWidth - pad;
+    const maxY = window.innerHeight - noBtn.offsetHeight - pad;
 
-        // Keep inside screen
-        const padding = 10;
-        const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-        const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+    nx = Math.max(pad, Math.min(nx,maxX));
+    ny = Math.max(pad, Math.min(ny,maxY));
 
-        newX = Math.max(padding, Math.min(newX, maxX));
-        newY = Math.max(padding, Math.min(newY, maxY));
+    noBtn.style.left = nx+"px";
+    noBtn.style.top  = ny+"px";
 
-        noBtn.style.left = newX + "px";
-        noBtn.style.top = newY + "px";
+    noBtn.textContent = taunts[attempt % taunts.length];
+}
 
-        // Taunt text
-        noBtn.textContent = taunts[attempt % taunts.length];
+/* desktop */
+noBtn.addEventListener("mouseenter",e=>{
+    dodge(e.clientX,e.clientY);
+});
+
+/* mobile */
+noBtn.addEventListener("touchstart",e=>{
+    e.preventDefault();
+    const t=e.touches[0];
+    dodge(t.clientX,t.clientY);
+});
+
+/* YES click + confetti */
+yesBtn.onclick = ()=>{
+    for(let i=0;i<80;i++){
+        const c=document.createElement("div");
+        c.className="confetti";
+        c.style.left=Math.random()*100+"vw";
+        c.style.top="-10px";
+        c.style.background=`hsl(${Math.random()*360},90%,60%)`;
+        document.body.appendChild(c);
+        setTimeout(()=>c.remove(),2000);
     }
 
-    // Desktop
-    noBtn.addEventListener("mouseenter", e => {
-        dodge(e.clientX, e.clientY);
-    });
+    document.body.innerHTML=`
+    <div style="height:100vh;display:flex;flex-direction:column;
+    justify-content:center;align-items:center;
+    background:linear-gradient(135deg,#ff2f6e,#ff9aa2);color:white">
+        <h1>Confirmed.</h1>
+        <h2>Sejuti is my Valentine.</h2>
+    </div>`;
+};
 
-    // Mobile
-    noBtn.addEventListener("touchstart", e => {
-        e.preventDefault();
-        const touch = e.touches[0];
-        dodge(touch.clientX, touch.clientY);
-    });
+/* hearts */
+for(let i=0;i<22;i++){
+    const h=document.createElement("div");
+    h.className="heart";
+    h.style.left=Math.random()*100+"vw";
+    h.style.animationDelay=Math.random()*5+"s";
+    document.body.appendChild(h);
+}
 
-    function yesClicked() {
-        document.body.innerHTML = `
-            <div style="
-                height:100vh;
-                display:flex;
-                align-items:center;
-                justify-content:center;
-                flex-direction:column;
-                background:linear-gradient(135deg,#ff2f6e,#ff9aa2);
-                color:white;
-                text-align:center;
-                padding:20px;">
-                <h1>You win 💖</h1>
-                <p style="font-size:1.4rem;">Tulika, you’re officially my Valentine 🎈</p>
-                <p>Smart choice 😄</p>
-            </div>
-        `;
-    }
-
-    // Hearts
-    for (let i = 0; i < 20; i++) {
-        const h = document.createElement("div");
-        h.className = "heart";
-        h.style.left = Math.random() * 100 + "vw";
-        h.style.animationDelay = Math.random() * 5 + "s";
-        document.body.appendChild(h);
-    }
+/* balloons */
+for(let i=0;i<10;i++){
+    const b=document.createElement("div");
+    b.className="balloon";
+    b.style.left=Math.random()*100+"vw";
+    b.style.background=`hsl(${Math.random()*360},80%,75%)`;
+    b.style.animationDelay=Math.random()*8+"s";
+    document.body.appendChild(b);
+}
 </script>
 
 </body>
 </html>
-
-
-
-
 
